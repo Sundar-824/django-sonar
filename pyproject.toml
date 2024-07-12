@@ -1,3 +1,11 @@
+[tool.poetry]
+name = "django_sonar"
+version = "0.0.1"
+description = "Django Sonar project for Mautourco"
+authors = ["Sundar R <sundar@broadbil.com>"]
+license = "Mautourco"
+readme = "README.md"
+
 [build-system]
 build-backend = "hatchling.build"
 requires = [

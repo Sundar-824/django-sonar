@@ -1,17 +1,19 @@
-import socket
+import json
 import time
+import socket
 import traceback
 import tracemalloc
 from datetime import datetime
 from urllib.parse import urlencode
 
+from django_sonar import utils
+from django.urls import resolve
 from django.conf import settings
 from django.db import connection
-from django.urls import resolve
 from django.utils.timezone import make_aware
 from django.contrib.auth import get_user_model
-from django_sonar import utils
 from django_sonar.models import SonarRequest, SonarData
+
 
 class RequestsMiddleware:
     def __init__(self, get_response):
@@ -153,7 +155,10 @@ class RequestsMiddleware:
         return request.headers.get('X-Requested-With') == 'XMLHttpRequest'
 
     def get_post_payload(self, request):
-        post_data = request.POST.copy()
+        post_data = request.body.decode('utf-8')
+        if not post_data:
+            return {}
+        post_data = json.loads(post_data)
         return post_data
 
     def process_exception(self, request, exception):

@@ -1,27 +1,32 @@
-<div class="card shadow-sm  border-light" hx-get="{% url 'sonar_requests' %}" hx-trigger="every 5s" hx-swap="outerHTML">
+<div class="card shadow-sm  border-light" hx-get="{% url 'sonar_requests' %}" hx-trigger="every 1000s" hx-swap="outerHTML">
     <div class="card-header">
         <h5 class="card-title">Requests</h5>
     </div>
     <div class="card-body">
+    {% load custom_filters %}
 
         {% if not sonar_requests %}
             <div class="text-light-grey">No requests found</div>
         {% else %}
 
         <table class="table table-dashed table-row-dashed table-hover">
+
             <thead>
             <tr class="">
                 <th scope="col">Verb</th>
                 <th scope="col">Path</th>
                 <th scope="col">Status</th>
                 <th scope="col">Duration</th>
-                <th scope="col">Happened</th>
-                <th class="w-50px">&nbsp;</th>
+                <th scope="col">IP Address</th>
+                <th scope="col">Date</th>
+                <th scope="col">Time</th>
+                <th class="w-50px">&nbsp</th>
             </tr>
             </thead>
+
             <tbody>
             {% for sonar_request in sonar_requests %}
-                <tr class="{% if not sonar_request.is_read %}bg-light{% endif %}">
+                <tr class="{% if not sonar_request.is_read %}bg-light{% endif %}" style="border-bottom: 1px solid #dee2e6; margin-bottom: 10px">
                     <td>
                         <span class="badge bg-secondary">{{ sonar_request.verb }}</span>
                     </td>
@@ -35,8 +40,19 @@
                             <span class="badge bg-danger">{{ sonar_request.status }}</span>
                         {% endif %}
                     </td>
-                    <td>{{ sonar_request.duration }}ms</td>
-                    <td>{{ sonar_request.created_at|timesince }} ago</td>
+
+                    {% with sonar_request.duration as duration %}
+                        {% if duration >= 1000 %}
+                            <td>{{ duration|divide:1000.0 }} Secs</td>
+                        {% else %}
+                            <td>{{ duration }} Ms</td>
+                        {% endif %}
+                    {% endwith %}
+
+                    <td>{{ sonar_request.ip_address }}</td>
+                    <td>{{ sonar_request.created_at|date_format:"%Y-%M-%d" }}</td>
+                    <td>{{ sonar_request.created_at|date_format:"%H:%M" }}</td>
+
                     <td class="text-end">
                         <a class="btn btn-sm btn-icon btn-primary"
                            href="{% url 'sonar_request_detail' sonar_request.uuid %}"

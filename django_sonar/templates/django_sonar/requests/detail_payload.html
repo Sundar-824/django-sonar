@@ -1,44 +1,28 @@
 <div class="card shadow-sm  border-light mt-3">
-
     <div class="card-body">
-
         {% if payload.get_payload %}
-
-            <div class="fw-bold text-muted pb-2">
-                GET
-            </div>
-
+            <div class="fw-bold text-muted pb-2">GET</div>
             {% for name, value in payload.get_payload.items %}
-                <div class="row">
-                    <div class="col border-bottom border-1 border-light pb-3">
-                        <strong>{{ name }}:</strong>
+                <div class="row" style="border-bottom: 1px solid #dee2e6">
+                    <div class="col" style="margin-top: 10px">
+                        <strong>{{ name }}: </strong>
                         <code>{{ value }}</code>
                     </div>
                 </div>
             {% endfor %}
-
         {% else %}
             <div class="text-light-grey">No GET Payload</div>
         {% endif %}
+    </div>
+</div>
 
-
+<div class="card shadow-sm  border-light mt-3">
+    <div class="card-body">
         {% if payload.post_payload %}
-
-            <h6>GET</h6>
-
-            {% for name, value in payload.post_payload.items %}
-                <div class="row">
-                    <div class="col border-bottom border-1 border-light pb-3">
-                        <code>{{ name }}: {{ value }}</code>
-                    </div>
-                </div>
-            {% endfor %}
-
+            <div class="fw-bold text-muted pb-2">POST</div>
+            <textarea rows="10" readonly style="width: 100%; border: 1px solid #dee2e6; border-radius: 0.25rem">{{ payload.post_payload }}</textarea>
         {% else %}
             <div class="text-light-grey">No POST Payload</div>
         {% endif %}
-
-
     </div>
-
 </div>
